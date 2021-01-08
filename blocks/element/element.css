@@ -1,0 +1,11 @@
+.element {
+  margin: 0;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  align-items: center;
+}
+
