@@ -2,6 +2,7 @@
   width: 20px;
   height: 18px;
   background-image: url(../../../images/heart.svg);
+  border: none;
   transition: opacity 1s ease;
 }
 
