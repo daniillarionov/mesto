@@ -8,6 +8,7 @@
   line-height: 17px;
   transition: opacity 1s ease;
   margin-top: 15px;
+  cursor: pointer;
 }
 
 .popup__submit:hover {
