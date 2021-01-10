@@ -1,7 +1,6 @@
 let editButton = document.querySelector('.profile__edit-button');
 let popup = document.querySelector('.popup');
 let closeButton = popup.querySelector('.popup__close');
-let form = popup.querySelector('.popup__form');
 let formElement = popup.querySelector('.popup__form');
 let nameInput = popup.querySelector('.popup__input_username');
 let jobInput = popup.querySelector('.popup__input_job');
@@ -14,6 +13,7 @@ let togglePopup = () => {
 function changeInputValue () {
   nameInput.value = username.textContent;
   jobInput.value = job.textContent;
+  togglePopup()
 }
 
 function handleFormSubmit (evt) {
@@ -25,8 +25,7 @@ function handleFormSubmit (evt) {
 
 formElement.addEventListener('submit', handleFormSubmit);
 editButton.addEventListener('click', changeInputValue);
-editButton.addEventListener('click', togglePopup);
-closeButton.addEventListener('click', togglePopup)  ;
+closeButton.addEventListener('click', togglePopup);
 popup.addEventListener('click', (event) => {
   if (event.target === event.currentTarget) {
     togglePopup();
