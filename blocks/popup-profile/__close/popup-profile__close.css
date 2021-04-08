@@ -1,4 +1,4 @@
-.popup__close {
+.popup-profile__close {
   width: 26px;
   height: 26px;
   padding: 0;
@@ -16,12 +16,12 @@
   cursor: pointer;
 }
 
-.popup__close:hover {
+.popup-profile__close:hover {
   opacity: .6;
 }
   
 @media screen and (min-width: 768px) {
-  .popup__close {
+  .popup-profile__close {
     background-size: 52px;
     width: 40px;
     height: 40px;

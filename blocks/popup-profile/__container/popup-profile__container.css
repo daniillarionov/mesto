@@ -1,4 +1,4 @@
-.popup__container {
+.popup-profile__container {
   padding: 25px 22px 25px;
   background-color: #fff;
   display: flex;
@@ -10,7 +10,7 @@
 }
 
 @media screen and (min-width: 768px) {
-  .popup__container {    
+  .popup-profile__container {    
     padding: 34px 36px 37px;
   }
 }
