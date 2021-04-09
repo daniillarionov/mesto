@@ -1,4 +1,4 @@
-.popup-add-card__close {
+.popup__close {
     width: 26px;
     height: 26px;
     padding: 0;
@@ -16,12 +16,12 @@
     cursor: pointer;
   }
   
-.popup-add-card__close:hover {
+.popup__close:hover {
   opacity: .6;
 }
     
 @media screen and (min-width: 768px) {
-  .popup-add-card__close {
+  .popup__close {
     background-size: 52px;
     width: 40px;
     height: 40px;

@@ -56,11 +56,11 @@ const handleFormSubmit = (e) => {
 }
 const renderCard = (e) => {
     e.preventDefault();
-    const elementCard = getCardElement({
+    const elementCard = createCard({
         name: elementInputName.value,
         link: elementInputLink.value
     })
-    elements.prepend(elementCard);
+    addCard(elements, elementCard);
     closePopup(popupAddCard);
 }
 const makePopupCloser = (popupElement) => {
@@ -70,10 +70,35 @@ const makePopupCloser = (popupElement) => {
         }
     }
 }
+const createCard = (item) => {
+    const element = elementTemplate.cloneNode(true);
+    const elementImage = element.querySelector('.element__image');
+    elementImage.src = item.link;
+    elementImage.alt = ('Фотография ' + item.name);
+    elementImage.name = item.name;
+    const elementText = element.querySelector('.element__text');
+    elementText.textContent = item.name;
+    const deleteButtonElement = element.querySelector('.element__delete-button');
+    deleteButtonElement.addEventListener('click', () => element.remove());
+    const likeButton = element.querySelector('.element__like');
+    likeButton.addEventListener('click', () => {
+        likeButton.classList.toggle('element__like_active')
+    })
+    elementImage.addEventListener('click', (e) => {
+        openPopup(popupViewCard);
+        popupViewCardImage.src = e.target.src;
+        popupViewCardCaption.textContent = e.target.name;
+        popupViewCardImage.alt = e.target.alt
+    })
+    return element;
+}
+const addCard = (container, cardElement) => {
+    container.prepend(cardElement);
+}
 form.addEventListener('submit', renderCard);
-profilePopup.addEventListener('click', makePopupCloser(profilePopup))
-popupAddCard.addEventListener('click', makePopupCloser(popupAddCard))
-popupViewCard.addEventListener('click', makePopupCloser(popupViewCard))
+profilePopup.addEventListener('click', makePopupCloser(profilePopup));
+popupAddCard.addEventListener('click', makePopupCloser(popupAddCard));
+popupViewCard.addEventListener('click', makePopupCloser(popupViewCard));
 formElement.addEventListener('submit', handleFormSubmit);
 editButton.addEventListener('click', changeInputValue);
 closeButton.addEventListener('click', function() {
@@ -88,30 +113,6 @@ closeButtonPopupAddCard.addEventListener('click', function() {
 closeButtonpopupViewCard.addEventListener('click', function() {
     closePopup(popupViewCard);
 })
-const getCardElement = (item => {
-    let element = elementTemplate.cloneNode(true);
-    let elementImage = element.querySelector('.element__image');
-    elementImage.src = item.link;
-    elementImage.alt = ('Фотография ' + item.name);
-    elementImage.name = item.name;
-    let elementText = element.querySelector('.element__text');
-    elementText.textContent = item.name;
-    elements.prepend(element);
-    let deleteButtonElement = element.querySelector('.element__delete-button');
-    deleteButtonElement.addEventListener('click', () => element.remove());
-    const likeButton = elements.querySelector('.element__like');
-    likeButton.addEventListener('click', () => {
-        likeButton.classList.toggle('element__like_active')
-    })
-    elementImage.addEventListener('click', (e) => {
-        openPopup(popupViewCard);
-        popupViewCardImage.src = e.target.src;
-        popupViewCardCaption.textContent = e.target.name;
-        popupViewCardImage.alt = e.target.alt
-    })
-    return element;
-})
 initialCards.forEach(item => {
-    const element = getCardElement(item)
-    elements.prepend(element)
+    addCard(elements, createCard(item));
 })
