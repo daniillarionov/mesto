@@ -2,7 +2,8 @@
   max-width: 75vw;
   max-height: 75vh;
   display: flex;
-  position: absolute;
+  position: relative;
   flex-direction: column;
+  margin-top: 12.5vh;
 }
   
