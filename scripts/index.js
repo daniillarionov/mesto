@@ -39,9 +39,11 @@ const initialCards = [{
 }];
 const openPopup = (popup) => {
     popup.classList.add('popup_opened');
+    enableEscListener()
 }
 const closePopup = (popup) => {
     popup.classList.remove('popup_opened');
+    document.removeEventListener('keyup', handleClosePopup);
 }
 const changeInputValue = () => {
     nameInput.value = username.textContent;
@@ -69,6 +71,19 @@ const makePopupCloser = (popupElement) => {
             closePopup(popupElement);
         }
     }
+}
+const isEscEvent = (e, action) => {
+    if(e.keyCode === 27) {
+        const activePopup = document.querySelector('.popup_opened');
+        action(activePopup);
+    }
+}
+const handleClosePopup = (e) => {
+    e.preventDefault();
+    isEscEvent(e, closePopup)
+}
+const enableEscListener = () => {
+    document.addEventListener('keyup', handleClosePopup);
 }
 const createCard = (item) => {
     const element = elementTemplate.cloneNode(true);
