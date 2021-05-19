@@ -1,7 +1,15 @@
+import {
+    Card
+}
+from './Card.js';
+import {
+    FormValidator
+}
+from "./FormValidator.js"
 const editButton = document.querySelector('.profile__edit-button');
 const profilePopup = document.querySelector('.popup-profile');
 const closeButton = profilePopup.querySelector('.popup-profile__close');
-const formElement = profilePopup.querySelector('.popup-profile__form');
+const formProfileElement = profilePopup.querySelector('.popup-profile__form');
 const nameInput = profilePopup.querySelector('.popup-profile__input_username');
 const jobInput = profilePopup.querySelector('.popup-profile__input_job');
 const username = document.querySelector('.profile__username');
@@ -9,14 +17,11 @@ const job = document.querySelector('.profile__job');
 const popupAddCard = document.querySelector('.popup-add-card');
 const addButton = document.querySelector('.profile__add-button');
 const closeButtonPopupAddCard = popupAddCard.querySelector('.popup-add-card__close');
-const elementTemplate = document.querySelector('.element-template').content.querySelector('.element');
-const form = document.querySelector('.popup-add-card__form');
-const elementInputName = form.querySelector('.popup-add-card__input_name');
-const elementInputLink = form.querySelector('.popup-add-card__input_link');
+const formAddElement = document.querySelector('.popup-add-card__form');
+const elementInputName = formAddElement.querySelector('.popup-add-card__input_name');
+const elementInputLink = formAddElement.querySelector('.popup-add-card__input_link');
 const elements = document.querySelector('.elements');
-const popupViewCard = document.querySelector('.popup-view-card');
-const popupViewCardImage = popupViewCard.querySelector('.popup-view-card__image');
-const popupViewCardCaption = popupViewCard.querySelector('.popup-view-card__caption');
+export const popupViewCard = document.querySelector('.popup-view-card');
 const closeButtonpopupViewCard = popupViewCard.querySelector('.popup-view-card__close');
 const initialCards = [{
     name: 'Гонолулу',
@@ -37,7 +42,20 @@ const initialCards = [{
     name: 'Долина смерти',
     link: 'https://images.unsplash.com/photo-1617640065014-e2fe33acdbb1?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80'
 }];
-const openPopup = (popup) => {
+const classConfig = {
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    formSectionSelector: '.popup__form-section',
+    submitButtonSelector: '.popup__submit',
+    inactiveButtonClass: 'popup__submit_inactive',
+    inputErrorClass: '.popup__input-error',
+    errorClass: 'popup__input-error_active'
+}
+const profileFormValidator = new FormValidator(classConfig, formProfileElement);
+profileFormValidator.enableValidation();
+const addFormValidator = new FormValidator(classConfig, formAddElement);
+addFormValidator.enableValidation();
+export const openPopup = (popup) => {
     popup.classList.add('popup_opened');
     enableEscListener()
 }
@@ -58,11 +76,11 @@ const handleFormSubmit = (e) => {
 }
 const renderCard = (e) => {
     e.preventDefault();
-    const elementCard = createCard({
+    const card = new Card({
         name: elementInputName.value,
         link: elementInputLink.value
     })
-    addCard(elements, elementCard);
+    addCard(elements, card.getElement());
     closePopup(popupAddCard);
 }
 const makePopupCloser = (popupElement) => {
@@ -73,7 +91,7 @@ const makePopupCloser = (popupElement) => {
     }
 }
 const isEscEvent = (e, action) => {
-    if(e.keyCode === 27) {
+    if (e.keyCode === 27) {
         const activePopup = document.querySelector('.popup_opened');
         action(activePopup);
     }
@@ -85,36 +103,14 @@ const handleClosePopup = (e) => {
 const enableEscListener = () => {
     document.addEventListener('keyup', handleClosePopup);
 }
-const createCard = (item) => {
-    const element = elementTemplate.cloneNode(true);
-    const elementImage = element.querySelector('.element__image');
-    elementImage.src = item.link;
-    elementImage.alt = ('Фотография ' + item.name);
-    elementImage.name = item.name;
-    const elementText = element.querySelector('.element__text');
-    elementText.textContent = item.name;
-    const deleteButtonElement = element.querySelector('.element__delete-button');
-    deleteButtonElement.addEventListener('click', () => element.remove());
-    const likeButton = element.querySelector('.element__like');
-    likeButton.addEventListener('click', () => {
-        likeButton.classList.toggle('element__like_active')
-    })
-    elementImage.addEventListener('click', (e) => {
-        openPopup(popupViewCard);
-        popupViewCardImage.src = e.target.src;
-        popupViewCardCaption.textContent = e.target.name;
-        popupViewCardImage.alt = e.target.alt
-    })
-    return element;
-}
 const addCard = (container, cardElement) => {
     container.prepend(cardElement);
 }
-form.addEventListener('submit', renderCard);
+formAddElement.addEventListener('submit', renderCard);
 profilePopup.addEventListener('click', makePopupCloser(profilePopup));
 popupAddCard.addEventListener('click', makePopupCloser(popupAddCard));
 popupViewCard.addEventListener('click', makePopupCloser(popupViewCard));
-formElement.addEventListener('submit', handleFormSubmit);
+formProfileElement.addEventListener('submit', handleFormSubmit);
 editButton.addEventListener('click', changeInputValue);
 closeButton.addEventListener('click', function() {
     closePopup(profilePopup);
@@ -128,6 +124,7 @@ closeButtonPopupAddCard.addEventListener('click', function() {
 closeButtonpopupViewCard.addEventListener('click', function() {
     closePopup(popupViewCard);
 })
-initialCards.forEach(item => {
-    addCard(elements, createCard(item));
+initialCards.forEach(data => {
+    const card = new Card(data);
+    addCard(elements, card.getElement());
 })
