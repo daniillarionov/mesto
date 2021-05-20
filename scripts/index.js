@@ -59,8 +59,6 @@ const addFormValidator = new FormValidator(classConfig, formAddElement);
 addFormValidator.enableValidation();
 export const openPopup = (popup) => {
     popup.classList.add('popup_opened');
-    elementInputName.value = '';
-    elementInputLink.value = '';
     enableEscListener()
 }
 const closePopup = (popup) => {
@@ -118,7 +116,9 @@ formAddElement.addEventListener('submit', renderCard);
 formProfileElement.addEventListener('submit', handleFormSubmit);
 editButton.addEventListener('click', openProfilePopup);
 addButton.addEventListener('click', function() {
-    openPopup(popupAddCard);
+    openPopup(popupAddCard);    
+    elementInputName.value = '';
+    elementInputLink.value = '';
     addFormValidator.resetValidation(); 
 });
 popups.forEach((popup) => {
