@@ -16,7 +16,7 @@ import {
     initialCards,
     classConfig
 }
-from '../components/constants.js'
+from '../utlis/constants.js'
 const openProfilePopup = () => {
     const userData = userInfo.getUserInfo()
     nameInput.value = userData.username
@@ -32,12 +32,16 @@ const handleFormSubmit = () => {
     popupWithFormProfile.close();
 }
 const cardFormSubmitHandler = (data) => {
-    const card = new Card(data, cardSelector, handleCardClick);
+    const card = createCard(data, cardSelector, handleCardClick);
     cardSection.addItem(card.getElement());
     popupWithFormAddCard.close()
 }
 const handleCardClick = (name, link) => {
-    PopupViewImage.open(name, link)
+    popupViewImage.open(name, link)
+}
+const createCard = (data) => {
+    const card = new Card(data, cardSelector, handleCardClick);
+    return card
 }
 const profileFormValidator = new FormValidator(classConfig, formProfileElement);
 profileFormValidator.enableValidation();
@@ -49,8 +53,8 @@ const userInfo = new UserInfo({
 })
 const popupWithFormProfile = new PopupWithForm('.popup-profile', handleFormSubmit)
 const popupWithFormAddCard = new PopupWithForm('.popup-add-card', cardFormSubmitHandler)
-const PopupViewImage = new PopupWithImage('.popup-view-card')
-PopupViewImage.setEventListeners()
+const popupViewImage = new PopupWithImage('.popup-view-card')
+popupViewImage.setEventListeners()
 popupWithFormProfile.setEventListeners();
 popupWithFormAddCard.setEventListeners();
 editButton.addEventListener('click', () => openProfilePopup());
@@ -61,8 +65,9 @@ addButton.addEventListener('click', function() {
 const cardSection = new Section({
     items: initialCards,
     renderer: function(data) {
-        const card = new Card(data, cardSelector, handleCardClick);
-        return card.getElement();
+        const card = createCard(data, cardSelector, handleCardClick)
+        const cardElement = card.getElement();
+        return cardElement;
     }
 }, '.elements')
 cardSection.render();
