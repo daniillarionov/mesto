@@ -12,6 +12,11 @@
   right: 15px;
   transition: opacity 1s ease;
   cursor: pointer;
+  display: block;
+}
+
+.element__delete-button_hidden {
+  display: none;
 }
   
 .element__delete-button:hover {
