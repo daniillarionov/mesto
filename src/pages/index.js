@@ -7,6 +7,7 @@ import { PopupWithImage } from '../components/PopupWithImage.js';
 import { PopupWithApprove } from '../components/PopupWithApprove.js';
 import { UserInfo } from '../components/UserInfo.js';
 import { Api } from '../components/Api.js';
+import { renderLoading } from '../utils/utils.js';
 import {
     editButton,
     formProfileElement,
@@ -18,43 +19,49 @@ import {
     classConfig,
     avatarElement,
     editAvatarButton,
-    formAvatarEdit
+    formAvatarEdit,
+    popupSelectors,
+    containerSelector,
+    userInfoSelectors
 }
-from '../utlis/constants.js'
+from '../utils/constants.js'
 let targetCard = null;
 let userId = null;
 let cardId = null;
 const openProfilePopup = () => {
-    const userData = userInfo.getUserInfo()
-    nameInput.value = userData.username
-    jobInput.value = userData.job
+    const userData = userInfo.getUserInfo();
+    nameInput.value = userData.username;
+    jobInput.value = userData.job;
     popupWithFormProfile.open();
     profileFormValidator.resetValidation();
 }
-const handleFormSubmit = (dataFromPopup) => {
-    api.uptadeUserInfo(dataFromPopup.username, dataFromPopup.job).then((data) => {
+const handleEditProfileFormSubmit = (dataFromPopup) => {
+    popupWithFormProfile.renderLoading()
+    api.updateUserInfo(dataFromPopup.username, dataFromPopup.job).then((data) => {
         userInfo.setUserInfo({
             username: data.name,
             job: data.about
-        })
+        });
+        popupWithFormProfile.close();
     }).catch((err) => {
         console.log(err);
     });
-    popupWithFormProfile.close();
 }
 const handleCardClick = (name, link) => {
     popupViewImage.open(name, link)
 }
 const cardFormSubmitHandler = (dataFrompopup) => {
+    popupWithFormAddCard.renderLoading()
     api.addCard(dataFrompopup).then((dataFromServer) => {
         const card = createCard(dataFromServer)
-        cardSection.addItem(card.getElement())
+        cardSection.addItem(card.getElement());
+        popupWithFormAddCard.close()
     }).catch((err) => {
         console.log(err);
     });
-    popupWithFormAddCard.close()
 }
 const handleSubmitDeletePopup = (id) => {
+    popupWithApprove.renderLoading()
     api.deleteCard(id).then(() => {
         targetCard.removeCard();
         popupWithApprove.close();
@@ -63,12 +70,13 @@ const handleSubmitDeletePopup = (id) => {
     });
 }
 const avatarFormSubmitHandler = (data) => {
+    popupWithAvatarEdit.renderLoading()
     api.editAvatar(data.link).then((data) => {
-        userInfo.setUserAvatar(data)
+        userInfo.setUserAvatar(data.avatar);
+        popupWithAvatarEdit.close()
     }).catch((err) => {
         console.log(err);
     });
-    popupWithAvatarEdit.close()
 }
 const openAvatarEditPopup = () => {
     popupWithAvatarEdit.open()
@@ -112,26 +120,23 @@ Promise.all([api.getUserInfo(), api.getInitialCards()]).then(([userData, cards])
 });
 const cardSection = new Section(function(data) {
     const card = createCard(data)
+    card._checkLikeState()
     const cardElement = card.getElement();
     card.handleLikeCounter(data);
     return cardElement;
-}, '.elements')
+}, containerSelector)
 const profileFormValidator = new FormValidator(classConfig, formProfileElement);
 profileFormValidator.enableValidation();
 const addFormValidator = new FormValidator(classConfig, formAddElement);
 addFormValidator.enableValidation();
 const editAvatarFormValidator = new FormValidator(classConfig, formAvatarEdit);
 editAvatarFormValidator.enableValidation()
-const userInfo = new UserInfo({
-    nameSelector: '.profile__username',
-    jobSelector: '.profile__job',
-    avatarSelector: '.profile__avatar'
-})
-const popupWithFormProfile = new PopupWithForm('.popup-profile', handleFormSubmit)
-const popupWithFormAddCard = new PopupWithForm('.popup-add-card', cardFormSubmitHandler)
-const popupWithAvatarEdit = new PopupWithForm('.popup-edit-avatar', avatarFormSubmitHandler)
-const popupViewImage = new PopupWithImage('.popup-view-card')
-const popupWithApprove = new PopupWithApprove('.popup-delete-card', handleSubmitDeletePopup)
+const userInfo = new UserInfo(userInfoSelectors);
+const popupWithFormProfile = new PopupWithForm(popupSelectors.popupProfileSelector, handleEditProfileFormSubmit, renderLoading)
+const popupWithFormAddCard = new PopupWithForm(popupSelectors.popupAddCardSelector, cardFormSubmitHandler, renderLoading)
+const popupWithAvatarEdit = new PopupWithForm(popupSelectors.popupEditAvatarSelector, avatarFormSubmitHandler, renderLoading)
+const popupViewImage = new PopupWithImage(popupSelectors.popupViewCardSelector)
+const popupWithApprove = new PopupWithApprove(popupSelectors.popupDeleteCardSelector, handleSubmitDeletePopup, renderLoading)
 popupWithApprove.setEventListeners()
 popupViewImage.setEventListeners()
 popupWithFormProfile.setEventListeners();

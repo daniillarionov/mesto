@@ -3,9 +3,9 @@ export class Api {
         this._cohort = options.cohort;
         this._token = options.token;
     }
-    _request(endpoint, mathod, body) {
+    _makeRequest(endpoint, method, body) {
         const fetchInit = {
-            method: mathod,
+            method: method,
             headers: {
                 authorization: this._token,
                 'Content-Type': 'application/json'
@@ -23,13 +23,13 @@ export class Api {
             }))
     }
     getInitialCards() {
-        return this._request('cards', 'GET')
+        return this._makeRequest('cards', 'GET')
     }
     getUserInfo() {
-        return this._request('users/me', 'GET')
+        return this._makeRequest('users/me', 'GET')
     }
-    uptadeUserInfo(name, job) {
-        return this._request('users/me', 'PATCH', {
+    updateUserInfo(name, job) {
+        return this._makeRequest('users/me', 'PATCH', {
             name: name,
             about: job
         })
@@ -38,22 +38,22 @@ export class Api {
         name,
         link
     }) {
-        return this._request('cards', 'POST', {
+        return this._makeRequest('cards', 'POST', {
             name,
             link
         })
     }
     deleteCard(id) {
-        return this._request(`cards/${id}`, 'DELETE')
+        return this._makeRequest(`cards/${id}`, 'DELETE')
     }
     setLike(id) {
-        return this._request(`cards/likes/${id}`, 'PUT')
+        return this._makeRequest(`cards/likes/${id}`, 'PUT')
     }
     removeLike(id) {
-        return this._request(`cards/likes/${id}`, 'DELETE')
+        return this._makeRequest(`cards/likes/${id}`, 'DELETE')
     }
     editAvatar(avatar) {
-        return this._request('users/me/avatar', 'PATCH', {
+        return this._makeRequest('users/me/avatar', 'PATCH', {
             avatar: avatar
         })
     }

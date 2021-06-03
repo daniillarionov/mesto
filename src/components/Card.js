@@ -13,7 +13,8 @@ export class Card {
         this._handleSetLike = handleSetLike;
         this._handleRemoveLike = handleRemoveLike;
         this._id = this._cardData._id
-        this._likeCounter = this._element.querySelector('.element__like-counter');    
+        this._likeCounter = this._element.querySelector('.element__like-counter');
+        this._likes = this._cardData.likes
     }
     _makeElement() {
         const elementTemplate = document.querySelector(this._templateSelector).content.querySelector('.element');
@@ -49,6 +50,13 @@ export class Card {
         this._likeButton.classList.remove('element__like_active');
         this._handleRemoveLike();
     }
+    _checkLikeState() {
+        this._likes.forEach((likeUser) => {
+          if (likeUser._id === this._currentUser) {
+            this._likeButton.classList.add('element__like_active');
+          }
+        })
+      }
     handleLikeCounter(data) {
         this._likeCounter.textContent = String(data.likes.length);
       }

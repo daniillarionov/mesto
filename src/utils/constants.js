@@ -9,6 +9,7 @@ export const formAddElement = document.querySelector('.popup-add-card__form');
 export const avatarElement = document.querySelector('.profile__avatar');
 export const editAvatarButton = document.querySelector('.profile__avatar-overlay');
 export const cardSelector = ".element-template";
+export const containerSelector = '.elements';
 export const classConfig = {
     formSelector: '.popup__form',
     inputSelector: '.popup__input',
@@ -18,4 +19,16 @@ export const classConfig = {
     inputInvalidClass: 'popup__input-invalid',
     inputErrorClass: '.popup__input-error',
     errorClass: 'popup__input-error_active'
+}
+export const popupSelectors = {
+    popupProfileSelector: '.popup-profile',
+    popupAddCardSelector: '.popup-add-card',
+    popupEditAvatarSelector: '.popup-edit-avatar',
+    popupViewCardSelector: '.popup-view-card',
+    popupDeleteCardSelector: '.popup-delete-card'
+}
+export const userInfoSelectors = {
+    nameSelector: '.profile__username',
+    jobSelector: '.profile__job',
+    avatarSelector: '.profile__avatar'
 }
