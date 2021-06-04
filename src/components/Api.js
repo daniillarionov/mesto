@@ -46,11 +46,8 @@ export class Api {
     deleteCard(id) {
         return this._makeRequest(`cards/${id}`, 'DELETE')
     }
-    setLike(id) {
-        return this._makeRequest(`cards/likes/${id}`, 'PUT')
-    }
-    removeLike(id) {
-        return this._makeRequest(`cards/likes/${id}`, 'DELETE')
+    Like(id, isLiked) {
+        return this._makeRequest(`cards/likes/${id}`, isLiked ? 'DELETE' : 'PUT')
     }
     editAvatar(avatar) {
         return this._makeRequest('users/me/avatar', 'PATCH', {

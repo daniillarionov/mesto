@@ -63,7 +63,7 @@ const cardFormSubmitHandler = (dataFrompopup) => {
 const handleSubmitDeletePopup = (id) => {
     popupWithApprove.renderLoading()
     api.deleteCard(id).then(() => {
-        targetCard.removeCard();
+        targetCard.removeElement();
         popupWithApprove.close();
     }).catch((err) => {
         console.log(err);
@@ -84,17 +84,10 @@ const openAvatarEditPopup = () => {
 const createCard = (data) => {
     const card = new Card(data, userId, cardSelector, handleCardClick, function handleDeleteCardClick(data) {
         popupWithApprove.open(data)
-    }, function handleSetLike() {
-        cardId = card.getId()
-        api.setLike(cardId).then((data) => {
-            card.handleLikeCounter(data);
-        }).catch((err) => {
-            console.log(err);
-        });
-    }, function handleRemoveLike() {
-        cardId = card.getId()
-        api.removeLike(cardId).then((data) => {
-            card.handleLikeCounter(data);
+    }, function handleLike(card) {
+        api.Like(card.getId(), card.getIsLiked())
+        .then((data) => {
+            card.updateLikesInfo(data);
         }).catch((err) => {
             console.log(err);
         });
@@ -120,9 +113,7 @@ Promise.all([api.getUserInfo(), api.getInitialCards()]).then(([userData, cards])
 });
 const cardSection = new Section(function(data) {
     const card = createCard(data)
-    card._checkLikeState()
     const cardElement = card.getElement();
-    card.handleLikeCounter(data);
     return cardElement;
 }, containerSelector)
 const profileFormValidator = new FormValidator(classConfig, formProfileElement);
